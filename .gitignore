@@ -1,0 +1,9 @@
+*
+!modules/
+!modules/*
+!*.js
+!*.json
+!*.md
+!.babelrc
+!mocha-webpack.opts
+!.gitignore
