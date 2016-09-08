@@ -8,17 +8,17 @@ var deleteEmpty = require('delete-empty');
 var failPlugin = require('webpack-fail-plugin');
 
 /* helper function to get into build directory */
-var libPath = function(name) {
+var distPath = function(name) {
 	if ( undefined === name ) {
-		return 'lib';
+		return 'dist';
 	}
 
-	return path.join('lib', name);
+	return path.join('dist', name);
 }
 
 /* helper to clean leftovers */
 var outputCleanup = function(dir, initial) {
-	if (false == fs.existsSync(libPath())){
+	if (false == fs.existsSync(distPath())){
 		return;
 	}
 
@@ -48,7 +48,7 @@ var outputCleanup = function(dir, initial) {
 var percentage_handler = function handler(percentage, msg) {
 	if ( 0 == percentage ) {
 		/* Build Started */
-		outputCleanup(libPath(), true);
+		outputCleanup(distPath(), true);
 		console.log("Build started... Good luck!");
 	} else if ( 1 == percentage ) {
 		// TODO: No Error detection. :(
@@ -57,7 +57,7 @@ var percentage_handler = function handler(percentage, msg) {
 		console.log("Bundling d.ts files ...");
 		dts.bundle(bundle_opts);
 
-		// Invokes lib/ cleanup
+		// Invokes dist/ cleanup
 		deleteEmpty(bundle_opts.baseDir, function(err, deleted) {
 			if ( err ) {
 				console.error("Couldn't clean up : " + err);
@@ -80,18 +80,18 @@ var bundle_opts = {
 	// if you want to load all .d.ts files from a path recursively you can use "path/project/**/*.d.ts"
 	//  ^ *** Experimental, TEST NEEDED, see "All .d.ts files" section
 	// - either relative or absolute
-	main: 'modules/main.d.ts',
+	main: 'src/main.d.ts',
 
 	// Optional
 
 	// base directory to be used for discovering type declarations (i.e. from this project itself)
 	// - default: dirname of main
-	baseDir: 'modules',
+	baseDir: 'src',
 	// path of output file. Is relative from baseDir but you can use absolute paths.
 	// if starts with "~/" then is relative to current path. See https://github.com/TypeStrong/dts-bundle/issues/26
 	//  ^ *** Experimental, TEST NEEDED
 	// - default: "<baseDir>/<name>.d.ts"
-	out: '../lib/main.d.ts',
+	out: '../dist/main.d.ts',
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
 	// - default: false
 	externals: false,
@@ -134,17 +134,17 @@ var bundle_opts = {
 };
 
 var webpack_opts = {
-	entry: './modules/main.ts',
+	entry: './src/main.ts',
 	target: 'node',
 	output: {
-		filename: libPath('main.js'),
+		filename: distPath('main.js'),
 		libraryTarget: "commonjs2"
 	},
 	resolve: {
 		extensions: ['', '.ts', '.js'],
 		modules: [
 			'node_modules',
-			'modules',
+			'src',
 		]
 	},
 	module: {
@@ -154,8 +154,7 @@ var webpack_opts = {
 	externals: [nodeExternals()],
 	plugins: [
 		failPlugin,
-		// TODO: Minifiy JS.
-		//		new webpack.optimize.UglifyJsPlugin(),
+		new webpack.optimize.UglifyJsPlugin(),
 		new webpack.ProgressPlugin(percentage_handler)
 	],
 	tslint: {

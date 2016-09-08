@@ -23,10 +23,13 @@ module.exports = {
 		new IstanbulPlugin({
 			test: /\.ts$/,
 			include: [
-				path.resolve('modules'),
+				path.resolve('src'),
 			],
 			exclude: [
 				path.resolve('node_modules'),
+				path.resolve('src/test'),
+				path.resolve('src/main.ts'),
+				path.resolve('src/index.ts'),
 				/\.spec\.ts$/,
 				/main\.test\.ts$/,
 			],

@@ -1,6 +1,6 @@
 *
-!modules/
-!modules/*
+!src/
+!src/**/*
 !*.js
 !*.json
 !*.md
