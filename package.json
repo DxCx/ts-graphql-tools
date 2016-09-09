@@ -1,6 +1,6 @@
 {
   "name": "ts-graphql-tools",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Rewrite of graphql-tools using typescript",
   "main": "dist/main.js",
   "typings": "dist/main.d.ts",
