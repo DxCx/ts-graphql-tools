@@ -375,6 +375,7 @@ function decorateWithLogger(fn: IResolveFn, logger: ILogger, hint: string = ''):
       // TODO: clone the error properly
       const newE = new Error();
       newE.stack = e.stack;
+      /* istanbul ignore else: always get the hint from addErrorLoggingToSchema */
       if (hint) {
         newE['originalMessage'] = e.message;
         newE['message'] = `Error in resolver ${hint}\n${e.message}`;
